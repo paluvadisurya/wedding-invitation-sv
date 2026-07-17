@@ -382,16 +382,22 @@ function mountPhoto(slot, cfg, opts = {}) {
       <span>${esc(t('gallery.photoSoon'))}</span>
     </div>`;
   if (!cfg?.src) return;
-  const img = new Image();
+  // the <img> must already be connected to the DOM before src is set —
+  // loading="lazy" on a detached Image() never resolves its fetch
+  const img = document.createElement('img');
   img.loading = 'lazy';
   img.decoding = 'async';
   img.alt = L(cfg.alt) || '';
+  img.style.opacity = '0';
+  img.style.transition = 'opacity .6s ease';
   img.addEventListener('load', () => {
     slot.querySelector('.ph')?.remove();
-    slot.appendChild(img);
+    requestAnimationFrame(() => { img.style.opacity = '1'; });
     if (opts.scrim) slot.insertAdjacentHTML('beforeend', '<div class="scrim"></div>');
   });
   // on error: placeholder simply stays — a missing photo never breaks the page
+  img.addEventListener('error', () => img.remove());
+  slot.appendChild(img);
   img.src = cfg.src;
 }
 
