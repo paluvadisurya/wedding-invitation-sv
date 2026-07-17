@@ -91,6 +91,14 @@ Put a licensed, gentle track (soft nadaswaram / veena works beautifully) at
 `assets/audio/theme.mp3` and set `music.src` in the config. A mute/unmute lotus appears
 in the top bar; audio only ever starts when a guest taps it.
 
+## Analytics
+
+[Vercel Web Analytics](https://vercel.com/docs/analytics) is wired in via
+`assets/js/vercel-analytics.mjs` — a vendored copy of `@vercel/analytics`'s
+framework-agnostic build, imported directly by the browser in `index.html` (no bundler
+needed, keeping the site dependency-free at runtime). It's a no-op until you enable
+**Web Analytics** for the project in the Vercel dashboard after deploying.
+
 ---
 
 ## Craft notes
