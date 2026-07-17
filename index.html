@@ -549,5 +549,9 @@
   </noscript>
 
   <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { inject } from './assets/js/vercel-analytics.mjs';
+    inject();
+  </script>
 </body>
 </html>
