@@ -1,0 +1,627 @@
+/* ==========================================================================
+   THE CONFLUENCE
+   One DOM structure, two genuine compositions: a left-hand rail on a phone,
+   a central gutter with two mirrored columns on a desktop.
+   ========================================================================== */
+
+.section {
+  --rail-w: 44px;
+  --rail-gap: var(--s-xs);
+  padding-block: var(--section-y);
+  padding-inline: var(--gutter);
+}
+
+/* ---- Intro ------------------------------------------------------------- */
+
+.intro {
+  max-width: var(--w-page);
+  margin-inline: auto;
+  margin-bottom: var(--s-3xl);
+}
+
+.eyebrow {
+  font-size: var(--t-2xs);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--tr-overline);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: var(--s-md);
+}
+
+.title {
+  font-size: var(--t-4xl);
+  line-height: var(--lh-solid);
+  letter-spacing: var(--tr-display);
+  margin-bottom: var(--s-lg);
+}
+
+.titleLine {
+  display: block;
+}
+
+.titleLine:last-child {
+  /* The second line is the one that matters; it gets the colour. */
+  color: var(--c-tulsi);
+}
+
+.lede {
+  max-width: var(--measure);
+  font-size: var(--t-md);
+  line-height: var(--lh-relaxed);
+  color: var(--ink-muted);
+}
+
+/* ---- Filter ------------------------------------------------------------ */
+
+.wrap {
+  max-width: var(--w-page);
+  margin-inline: auto;
+}
+
+.filter {
+  border: none;
+  margin-bottom: var(--s-2xl);
+  padding-bottom: var(--s-lg);
+  border-bottom: var(--stroke-hair) solid var(--c-line);
+}
+
+.filterLegend {
+  font-size: var(--t-2xs);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--tr-overline);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: var(--s-sm);
+}
+
+.filterOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2xs);
+}
+
+.filterInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.filterLabel {
+  display: inline-block;
+  padding: var(--s-2xs) var(--s-sm);
+  font-size: var(--t-sm);
+  color: var(--ink-muted);
+  cursor: pointer;
+  border: var(--stroke-hair) solid var(--c-line);
+  border-radius: var(--r-stone);
+  transition:
+    color var(--d-quick) var(--e-settle),
+    border-color var(--d-quick) var(--e-settle),
+    background-color var(--d-quick) var(--e-settle);
+}
+
+.filterLabel:hover {
+  border-color: var(--c-line-strong);
+  color: var(--ink);
+}
+
+.filterInput:checked + .filterLabel {
+  color: var(--ink);
+  background: var(--bg-raised);
+  border-color: var(--c-line-strong);
+}
+
+.filterInput:focus-visible + .filterLabel {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 3px;
+}
+
+.filterHint {
+  margin-top: var(--s-sm);
+  font-size: var(--t-xs);
+  color: var(--ink-faint);
+  max-width: var(--measure-tight);
+}
+
+/* Choosing a side steps the other one back rather than deleting it: the fact
+   that both are happening at once is the point of this section. If :has() is
+   unsupported nothing fades, which is a perfectly good default. */
+.wrap:has(#side-bride:checked) [data-lane='groom'],
+.wrap:has(#side-groom:checked) [data-lane='bride'] {
+  opacity: 0.2;
+}
+
+.wrap:has(#side-bride:checked) [data-lane='groom'],
+.wrap:has(#side-groom:checked) [data-lane='bride'] {
+  transition: opacity var(--d-base) var(--e-settle);
+}
+
+/* ---- Timeline ----------------------------------------------------------
+   Every direct child is a grid sharing the same column template, so their rail
+   cells stack into one unbroken thread down the whole section. */
+
+.timeline {
+  position: relative;
+}
+
+.phaseHead,
+.dayHead,
+.join,
+.pair,
+.end {
+  display: grid;
+  grid-template-columns: var(--rail-w) 1fr;
+  column-gap: var(--rail-gap);
+}
+
+/* ---- Phase heading ----------------------------------------------------- */
+
+/* Vertical rhythm is carried by margins on the *content* cells, never by
+   padding on the grid itself. Padding on the grid would sit outside the rail
+   cell and break the thread into pieces. */
+.phaseHead {
+  align-items: end;
+}
+
+.phaseRail {
+  position: relative;
+  align-self: stretch;
+  grid-row: 1;
+}
+
+.phaseText {
+  grid-row: 1;
+  margin-top: var(--s-3xl);
+  padding-bottom: var(--s-sm);
+}
+
+.phaseTitle {
+  font-size: var(--t-lg);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  font-weight: var(--w-medium);
+  color: var(--ink);
+}
+
+.phaseNote {
+  margin-top: var(--s-3xs);
+  font-size: var(--t-sm);
+  color: var(--ink-muted);
+  max-width: var(--measure-tight);
+}
+
+/* ---- Day band ---------------------------------------------------------- */
+
+.dayHead {
+  align-items: center;
+}
+
+.dayRail {
+  position: relative;
+  align-self: stretch;
+  grid-row: 1;
+}
+
+.dayDate {
+  grid-row: 1;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-xs);
+  margin-top: var(--s-2xl);
+  border-top: var(--stroke-hair) solid var(--c-line);
+  padding-top: var(--s-2xs);
+}
+
+.dayNum {
+  font-family: var(--font-display-stack);
+  font-size: var(--t-2xl);
+  line-height: var(--lh-solid);
+  letter-spacing: var(--tr-display);
+  color: var(--ink);
+  font-variant-numeric: lining-nums;
+}
+
+.dayMeta {
+  display: flex;
+  gap: var(--s-2xs);
+  font-size: var(--t-2xs);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.dayWeekday {
+  color: var(--ink-faint);
+}
+
+.dayApprox {
+  font-size: var(--t-sm);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+/* ---- A pair of parallel ceremonies ------------------------------------- */
+
+.pair {
+  align-items: start;
+}
+
+/* `1 / -1` would not work here: with no explicit rows declared, line -1 is
+   line 1 and the span collapses. A fixed span covers both the stacked phone
+   layout and the single-row desktop one. */
+.rail {
+  position: relative;
+  align-self: stretch;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+.cellBride,
+.cellGroom,
+.cellBoth {
+  position: relative;
+  grid-column: 2;
+  min-width: 0;
+  margin-top: var(--s-xl);
+}
+
+/* Two ceremonies stacked on a phone need less air between them than between
+   one day and the next. */
+@media (max-width: 61.999rem) {
+  .cellBride + .cellGroom:not(:empty) {
+    margin-top: var(--s-lg);
+  }
+}
+
+.cellBride:empty {
+  margin-top: 0;
+}
+
+/* The dot, hung off the ceremony it belongs to and reaching back into the
+   rail. `--lane-f` is the lane's position across the rail, 0 to 1. */
+.nodeSlot {
+  position: absolute;
+  top: 0.62em;
+  display: block;
+  z-index: var(--z-thread);
+}
+
+[data-lane='bride'] > .nodeSlot {
+  --lane-f: 0.2;
+}
+[data-lane='groom'] > .nodeSlot {
+  --lane-f: 0.8;
+}
+[data-lane='both'] > .nodeSlot {
+  --lane-f: 0.5;
+}
+
+.nodeSlot {
+  left: calc(-1 * (var(--rail-gap) + var(--rail-w) * (1 - var(--lane-f))));
+  transform: translateX(-50%);
+}
+
+/* ---- The join between phases ------------------------------------------- */
+
+.join {
+  align-items: center;
+}
+
+/* No margin, ever: any space above this cell would fall outside the drawn
+   line and snap the thread. Breathing room comes from the margins on the
+   content cells either side, which the rail runs through. The min-height is
+   for the case where this join is a plain straight run — absolutely
+   positioned, and so otherwise collapsed to nothing. */
+.joinRail {
+  position: relative;
+  align-self: stretch;
+  grid-row: 1;
+}
+
+/* The thread ends once, in a kalash — the vessel set at the summit of a
+   temple tower. */
+.end {
+  align-items: start;
+}
+
+.endRail {
+  position: relative;
+  align-self: stretch;
+  grid-row: 1;
+}
+
+.joinNote {
+  grid-row: 1;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-xs);
+}
+
+.joinDistance {
+  font-family: var(--font-display-stack);
+  font-size: var(--t-lg);
+  letter-spacing: var(--tr-title);
+  color: var(--c-brass);
+}
+
+.joinRoute {
+  font-size: var(--t-2xs);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* ---- One ceremony ------------------------------------------------------ */
+
+.entry {
+  position: relative;
+  max-width: 32rem;
+}
+
+.entryName {
+  font-size: var(--t-xl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-title);
+  color: var(--ink);
+}
+
+[data-lane='bride'] .entryName {
+  color: var(--side-bride-ink);
+}
+[data-lane='groom'] .entryName {
+  color: var(--side-groom);
+}
+[data-lane='both'] .entryName {
+  color: var(--side-both);
+}
+
+.pronunciation {
+  margin-top: var(--s-3xs);
+  font-size: var(--t-2xs);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.entryMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2xs);
+  margin-top: var(--s-2xs);
+  font-size: var(--t-2xs);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.entryDot {
+  width: 3px;
+  height: 3px;
+  border-radius: var(--r-round);
+  background: var(--c-line-strong);
+}
+
+.entryMeaning {
+  margin-top: var(--s-xs);
+  font-size: var(--t-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--ink-muted);
+  max-width: var(--measure-tight);
+}
+
+/* Content that does not exist yet is drawn deliberately, never left blank. */
+.entryMeaning[data-pending],
+.entryVenue[data-pending] {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.entryFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2xs) var(--s-sm);
+  margin-top: var(--s-xs);
+  font-size: var(--t-2xs);
+  letter-spacing: var(--tr-label);
+  color: var(--ink-faint);
+}
+
+.entryVenue[data-pending] {
+  /* A dashed underline reads as "not settled" without shouting it. */
+  border-bottom: var(--stroke-hair) dashed var(--c-line-strong);
+  padding-bottom: 1px;
+  font-style: normal;
+}
+
+.entryPast,
+.entryTentative {
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.entry[data-past] {
+  opacity: 0.62;
+}
+
+.entry[data-muhurtham] .entryName {
+  font-size: var(--t-2xl);
+}
+
+/* ---- On the road ------------------------------------------------------- */
+
+.road {
+  padding-top: var(--s-2xs);
+}
+
+.roadLabel {
+  display: block;
+  font-size: var(--t-2xs);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--tr-overline);
+  text-transform: uppercase;
+  color: var(--side-groom);
+  opacity: 0.75;
+}
+
+.roadDetail {
+  display: block;
+  margin-top: var(--s-3xs);
+  font-size: var(--t-xs);
+  color: var(--ink-faint);
+  max-width: 18rem;
+}
+
+/* ==========================================================================
+   DESKTOP — not the phone stretched. The rail moves to the centre and the two
+   towns take a column each, so ceremonies that mirror each other sit level.
+   ========================================================================== */
+
+@media (min-width: 62rem) {
+  .section {
+    --rail-w: 148px;
+    --rail-gap: var(--s-xl);
+  }
+
+  .phaseHead,
+  .dayHead,
+  .join,
+  .pair {
+    grid-template-columns: 1fr var(--rail-w) 1fr;
+  }
+
+  .phaseRail,
+  .dayRail,
+  .joinRail,
+  .rail {
+    grid-column: 2;
+  }
+
+  .phaseText {
+    grid-column: 3;
+    padding-bottom: 0;
+  }
+
+  /* The date belongs to both towns equally, so on a desktop it is set on the
+     thread itself — between the two lanes while they run apart, and over the
+     single lane once they have joined. The page-coloured ground lets the
+     thread pass behind it like a bead on a cord. */
+  .dayDate {
+    grid-column: 2;
+    justify-self: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin-top: var(--s-3xl);
+    padding: var(--s-2xs) var(--s-xs);
+    border-top: none;
+    background: var(--bg-page);
+  }
+
+  .dayNum {
+    font-size: var(--t-xl);
+  }
+
+  .dayMeta {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    line-height: var(--lh-snug);
+  }
+
+  .dayApprox {
+    max-width: 8rem;
+    text-align: center;
+    line-height: var(--lh-snug);
+  }
+
+  .joinNote {
+    grid-column: 3;
+  }
+
+  .cellBride {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: end;
+    text-align: right;
+  }
+
+  .cellGroom {
+    grid-column: 3;
+    grid-row: 1;
+    padding-top: 0;
+  }
+
+  .cellBoth {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+    text-align: center;
+    padding-top: 0;
+  }
+
+  .entry {
+    max-width: 26rem;
+  }
+
+  .cellBoth .entry {
+    max-width: 34rem;
+    /* Once the families have joined there is a single thread, and the shared
+       ceremonies sit centred on it. The page-coloured ground lets the cord
+       pass behind each one rather than through the middle of the type — the
+       same device as the date markers, so ceremonies read as beads threaded
+       onto it. */
+    padding: var(--s-md) var(--s-lg);
+    background: var(--bg-page);
+  }
+
+  /* Mirrored columns: the bride's side reads right-to-left toward the thread,
+     the groom's away from it, so the two lean into the centre. */
+  .cellBride .entryMeta,
+  .cellBride .entryFoot {
+    justify-content: flex-end;
+  }
+
+  .cellBride .entryMeaning {
+    margin-left: auto;
+  }
+
+  .cellBoth .entryMeta,
+  .cellBoth .entryFoot {
+    justify-content: center;
+  }
+
+  .cellBoth .entryMeaning {
+    margin-inline: auto;
+  }
+
+  /* Node offsets flip: the bride's dot hangs off the right edge of her column,
+     the groom's off the left edge of his. */
+  .cellBride .nodeSlot {
+    left: auto;
+    right: calc(-1 * (var(--rail-gap) + var(--rail-w) * var(--lane-f)));
+    transform: translateX(50%);
+  }
+
+  .cellGroom .nodeSlot {
+    left: calc(-1 * (var(--rail-gap) + var(--rail-w) * (1 - var(--lane-f))));
+  }
+
+  .cellBoth .nodeSlot {
+    left: 50%;
+  }
+
+  .road {
+    padding-top: 0;
+  }
+
+  .title {
+    font-size: var(--t-5xl);
+  }
+}

@@ -1,120 +1,70 @@
-# Srivalli & Surya — Wedding Invitation 🌸
+# Srivalli & Surya — wedding invitation
 
-A cinematic, bilingual (English · తెలుగు) wedding invitation website — a kolam that draws
-itself in light, drifting gold dust, petal showers, a living diya, and every date, venue and
-word driven by **one config file**.
+A one-page invitation for a wedding across two towns in Telangana and Andhra
+Pradesh, 23–28 August 2026.
 
-Built as a fully static site: no build step, no framework, no backend. Open it, edit one
-JSON file, deploy anywhere.
+**If you only read one thing:** everything you are likely to want to change
+lives in `src/config/`. You do not need to know how to code to edit it.
 
 ---
 
-## Run it locally
+## Changing the content
 
-Any static file server works (the site loads `config.json` over HTTP, so don't open
-`index.html` straight from disk):
+| What you want to change | File |
+|---|---|
+| Names, families, muhurtham, towns, phone numbers | `src/config/wedding.ts` |
+| Ceremonies — times, venues, meanings, travel, stay | `src/config/events.ts` |
+| Every other word on the site | `src/config/copy.ts` |
+| Turning whole sections on and off, page title | `src/config/site.ts` |
+
+Lines marked `← FILL IN` are the ones still waiting on you.
+
+**Blanks are safe.** Anywhere the config says `null`, the site draws a
+deliberate "not settled yet" state instead of breaking or leaving a hole. You
+can publish today with half of it unfilled and fill the rest in as you go.
+Never type `TBD` — write `null` and let the page say it properly.
+
+**Times** are 24-hour and Indian Standard Time. `'07:00'` is 7 AM, `'17:00'` is
+5 PM. Where a ceremony really ends at "lunch", still give `end` a best-guess
+time — calendar apps need one — and put the word guests should see in
+`endLabel`.
+
+## Running it
 
 ```bash
-npx serve            # or: python3 -m http.server 8000
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # production build
 ```
 
-Then open the printed URL.
+Everything works with no configuration and no secrets.
 
-## Deploy it (pick one)
+## Deploying
 
-- **GitHub Pages** — repo Settings → Pages → deploy from branch. Done.
-- **Netlify / Vercel / Cloudflare Pages** — drag-and-drop the folder or connect the repo.
-  No build command, no output directory — it's already a website.
+Push to GitHub and import the repository at [vercel.com/new](https://vercel.com/new).
+No settings to change. To redeploy after editing the config, commit and push —
+Vercel rebuilds automatically.
 
-After deploying, do two small things:
+Once you have a real domain, set `NEXT_PUBLIC_SITE_URL` in the Vercel project
+settings (e.g. `https://srivalliandsurya.com`, no trailing slash) so shared
+links preview correctly.
 
-1. In `config.json`, set `meta.siteUrl` to your final URL (used in share messages).
-2. In `index.html`, change the `og:image` meta tag to the **absolute** URL
-   (e.g. `https://your-site.example/assets/og-image.png`) so WhatsApp link previews
-   always show the gold share card.
+### Privacy
 
----
+The site is **unlisted** by default: anyone with the link opens it instantly,
+but search engines are told to stay away, because this page carries phone
+numbers and home towns. That is the `indexable: false` line in
+`src/config/site.ts`. Change it only if you want the site in Google forever.
 
-## Everything lives in `config.json`
+## Notes for whoever maintains this
 
-Open `config.json` — it is deliberately human-readable. Any other couple can reuse this
-site by editing that one file. Text fields that guests see come in pairs:
-`{ "en": "English text", "te": "తెలుగు పాఠ్యం" }`.
-
-| Section | What it controls |
-|---|---|
-| `couple` | Names (both scripts), hashtag, which town belongs to which side |
-| `wedding.muhurthamISO` | The muhurtham moment — drives the hero date, live countdown and “Save the date” |
-| `events[]` | Every ceremony: name, tagline, date/time, duration, town, side, venue, maps link, dress code |
-| `towns` | Town names, states and Google Maps links |
-| `photos` | Paths + alt text for the couple's 3 photos |
-| `story` | Intro line + three timeline beats |
-| `travel[]` | How to reach each town (air / rail / road) + accommodation notes |
-| `rsvp` | WhatsApp number and/or email that receives RSVPs, deadline, privacy note |
-| `livestream.url` | Optional — adds “Watch live” buttons when filled |
-| `contacts[]` | Per-side coordinator names and phone numbers |
-| `music` | Optional background audio (opt-in only, never autoplays) |
-| `blessing`, `invocation` | The శతమానం భవతి blessing and the opening shloka |
-| `palette` | Override the gold/pastel colour tokens |
-| `strings` | Every interface label, in both languages |
-
-### Common edits
-
-- **Fill in a venue** — find the event in `events[]`, set `venueName.en` / `venueName.te`
-  and its `mapsUrl` (share link from Google Maps). The “Venue to be announced” state
-  disappears automatically, and calendar exports update themselves.
-- **Set the wedding town (26 Aug)** — the muhurtham event has `"town": ""`. Set it to
-  `"wanaparthy"` or `"vinukonda"` (or add a new town under `towns`).
-- **Receive RSVPs & wishes on WhatsApp** — set `rsvp.whatsappNumber` with country code,
-  digits only, e.g. `"919876543210"`. Guests' responses arrive as WhatsApp messages;
-  nothing is stored on the site. (With no number and no email set, guests get a graceful
-  copy-to-clipboard fallback.)
-- **Add an event** — copy any object in `events[]`, change the fields. The timeline,
-  day grouping, countdown and calendar buttons all render from this array.
-- **Add gallery photos later** — drop files in `assets/photos/` and list them under
-  `photos.galleryExtra` as `{ "src": "assets/photos/xyz.jpg", "alt": { "en": "…", "te": "…" } }`.
-
-## The couple's 3 photos
-
-Drop them into **`assets/photos/`** as:
-
-- `hero.jpg` — hero portrait (portrait orientation looks best in the gold arch)
-- `story.jpg` — the “Our story” photo
-- `finale.jpg` — gallery finale
-
-Until the files exist the site shows intentional “photo coming soon” placeholders —
-nothing ever looks broken. See `assets/photos/README.txt` for tips.
-
-## Optional music
-
-Put a licensed, gentle track (soft nadaswaram / veena works beautifully) at
-`assets/audio/theme.mp3` and set `music.src` in the config. A mute/unmute lotus appears
-in the top bar; audio only ever starts when a guest taps it.
-
-## Analytics
-
-[Vercel Web Analytics](https://vercel.com/docs/analytics) is wired in via
-`assets/js/vercel-analytics.mjs` — a vendored copy of `@vercel/analytics`'s
-framework-agnostic build, imported directly by the browser in `index.html` (no bundler
-needed, keeping the site dependency-free at runtime). It's a no-op until you enable
-**Web Analytics** for the project in the Vercel dashboard after deploying.
-
----
-
-## Craft notes
-
-- **Mobile-first** — designed for a one-handed WhatsApp open on a mid-range phone;
-  desktop scales the same scenes up with a center-spine timeline, sticky story photo
-  and a custom gold cursor.
-- **Accessible** — respects `prefers-reduced-motion` (all particles, showers and letter
-  animation switch off; content appears instantly), strong text contrast throughout,
-  keyboard-focus styles, semantic headings, `aria` labels on interactive icons.
-- **Fast** — self-hosted variable fonts (~330 KB total, subset per script), two small
-  canvases that sleep when idle or hidden, zero dependencies, lazy-loaded images.
-- **Add to calendar** — every event offers Google Calendar and a downloadable `.ics`
-  (Apple/Outlook), generated on the fly from the config in IST.
-- **Fonts** — Cormorant Garamond, Outfit, Noto Serif/Sans Telugu (SIL Open Font License,
-  self-hosted in `assets/fonts/`). All motifs (kolam, gopuram skyline, toranam, diya,
-  peacock feather, event icons) are hand-drawn SVG in `index.html` — no stock art.
-
-మీ జీవితం శతమానం భవతి 🪔
+- Design reasoning — palette, type, the thread, what was rejected — is in
+  [`DESIGN.md`](./DESIGN.md). Read it before overturning a decision.
+- Fonts are self-hosted, subset and committed. `scripts/build-fonts.sh`
+  regenerates them; a normal build never needs to.
+- `tools/lines.cjs` checks that the thread running down the timeline is
+  unbroken at any width. Run it against a dev server after layout changes.
+- `npm audit` reports advisories in `sharp` and `postcss`. Both are build-time
+  dependencies of Next.js itself and neither is reachable from this site at
+  runtime. `npm audit fix --force` "resolves" them by downgrading Next to
+  version 9, which would be far worse. Left alone deliberately.

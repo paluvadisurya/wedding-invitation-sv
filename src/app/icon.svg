@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- The knot, at sixteen pixels: two threads crossing and becoming one.
+       The same geometry as the Edurukollu weave on the page itself. -->
+  <rect width="32" height="32" fill="#EDEFE9"/>
+  <g fill="none" stroke-width="2.4" stroke-linecap="round">
+    <path d="M9 3 C9 9 22 11 22 16 C22 22 16 24 16 29" stroke="#C8891B"/>
+    <path d="M23 3 C23 9 10 11 10 16 C10 22 16 24 16 29" stroke="#EDEFE9" stroke-width="6"/>
+    <path d="M23 3 C23 9 10 11 10 16 C10 22 16 24 16 29" stroke="#B22A22"/>
+  </g>
+</svg>

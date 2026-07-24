@@ -1,0 +1,156 @@
+/* ==========================================================================
+   MOTION
+
+   Choreography, not decoration. Three rules govern everything here:
+
+   1. The thread draws itself. It is a cord being laid down the page as you
+      descend, so it grows from where it started rather than appearing.
+   2. Ceremonies arrive *out of the thread*, moving away from it — the bride's
+      side leftward, the groom's rightward, shared ones rising in place. They
+      belong to the cord, so that is where they come from. Nothing on this site
+      fades upward from twenty pixels below.
+   3. Nothing that costs more than it earns: every property animated here is
+      one the compositor can handle on its own — transform, opacity, and
+      stroke-dashoffset. No layout is triggered by any of it.
+
+   All of this applies only under [data-motion='on'], which is set before first
+   paint and never set at all when the guest prefers reduced motion. In that
+   case the page renders complete and still: thread already drawn, every
+   ceremony already in place. That version is designed, not switched off.
+   ========================================================================== */
+
+[data-motion='on'] [data-reveal] {
+  transition:
+    opacity var(--d-slow) var(--e-settle),
+    transform var(--d-slow) var(--e-settle),
+    stroke-dashoffset var(--d-ritual) var(--e-draw);
+}
+
+/* ---- The thread laying itself down ------------------------------------- */
+
+/* Straight runs grow downward from the point the previous piece ended. */
+[data-motion='on'] [data-reveal='run'] {
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition-duration: var(--d-ritual);
+  transition-timing-function: var(--e-draw);
+}
+
+[data-motion='on'] [data-reveal='run'][data-revealed] {
+  transform: scaleY(1);
+}
+
+/* Shaped pieces — the parting, the knot, the journey — are drawn stroke-first.
+   pathLength is normalised to 1 in the markup so one rule serves every curve
+   regardless of its real length. */
+[data-motion='on'] [data-reveal='draw'] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition-duration: var(--d-processional);
+  transition-timing-function: var(--e-draw);
+}
+
+[data-motion='on'] [data-reveal='draw'][data-revealed] {
+  stroke-dashoffset: 0;
+}
+
+/* ---- The pulli ---------------------------------------------------------- */
+
+/* A dot is placed, so it lands with a little weight and settles. */
+[data-motion='on'] [data-reveal='node'] {
+  transform: scale(0);
+  transition-duration: var(--d-base);
+  transition-timing-function: var(--e-swing);
+  transition-delay: 160ms;
+}
+
+[data-motion='on'] [data-reveal='node'][data-revealed] {
+  transform: scale(1);
+}
+
+/* ---- Ceremonies arriving out of the thread ------------------------------ */
+
+[data-motion='on'] [data-reveal='entry'] {
+  opacity: 0;
+  /* On a phone the thread runs down the left, so everything comes from it. */
+  transform: translate3d(calc(-1 * var(--s-md)), 0, 0);
+}
+
+[data-motion='on'] [data-reveal='entry'][data-revealed] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Within a ceremony the lines settle in reading order, closely spaced — a
+   sequence, not a queue. */
+[data-motion='on'] [data-reveal='entry'] > * {
+  opacity: 0;
+  transition: opacity var(--d-base) var(--e-settle);
+}
+
+[data-motion='on'] [data-reveal='entry'][data-revealed] > * {
+  opacity: 1;
+}
+
+[data-motion='on'] [data-reveal='entry'][data-revealed] > *:nth-child(2) {
+  transition-delay: 60ms;
+}
+[data-motion='on'] [data-reveal='entry'][data-revealed] > *:nth-child(3) {
+  transition-delay: 110ms;
+}
+[data-motion='on'] [data-reveal='entry'][data-revealed] > *:nth-child(4) {
+  transition-delay: 150ms;
+}
+[data-motion='on'] [data-reveal='entry'][data-revealed] > *:nth-child(n + 5) {
+  transition-delay: 190ms;
+}
+
+/* ---- Day markers and headings ------------------------------------------- */
+
+[data-motion='on'] [data-reveal='plaque'] {
+  opacity: 0;
+  transform: translate3d(0, 0, 0) scale(0.96);
+  transition-duration: var(--d-base);
+}
+
+[data-motion='on'] [data-reveal='plaque'][data-revealed] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* ---- The finial --------------------------------------------------------- */
+
+[data-motion='on'] [data-reveal='finial'] {
+  opacity: 0;
+  transform: scale(0.8);
+  transform-origin: top center;
+  transition-duration: var(--d-ritual);
+  transition-timing-function: var(--e-swing);
+}
+
+[data-motion='on'] [data-reveal='finial'][data-revealed] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ==========================================================================
+   DESKTOP — the two columns lean in toward the thread, so their ceremonies
+   arrive from it in opposite directions and the mirroring is legible in the
+   movement itself, not only in the layout.
+   ========================================================================== */
+
+@media (min-width: 62rem) {
+  [data-motion='on'] [data-lane='bride'][data-reveal='entry'] {
+    transform: translate3d(var(--s-md), 0, 0);
+  }
+
+  [data-motion='on'] [data-lane='groom'][data-reveal='entry'] {
+    transform: translate3d(calc(-1 * var(--s-md)), 0, 0);
+  }
+
+  /* Shared ceremonies sit on the thread itself and have no side to come from,
+     so they rise into place instead. */
+  [data-motion='on'] [data-lane='both'][data-reveal='entry'] {
+    transform: translate3d(0, var(--s-xs), 0);
+  }
+}

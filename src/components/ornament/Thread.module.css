@@ -1,0 +1,106 @@
+/* The thread. Every value here resolves to a token. */
+
+/* A run fills its rail cell exactly, so runs in consecutive grid rows stack
+   into one unbroken thread. It is absolutely positioned so that several runs
+   (a lane and a road, say) can occupy the same cell without stacking. */
+.run {
+  position: absolute;
+  inset: 0;
+}
+
+/* Centred with a negative margin rather than translateX, which leaves the
+   transform property free for the reveal animation to use. */
+.line {
+  position: absolute;
+  inset-block: -1px; /* overlap the neighbouring run so joins are seamless */
+  width: var(--stroke-thin);
+  margin-left: calc(var(--stroke-thin) / -2);
+  background: currentColor;
+  transition: opacity var(--d-base) var(--e-settle);
+}
+
+.roadLine {
+  /* A journey is not a ceremony and is not dressed as one. */
+  width: 0;
+  background: none;
+  border-left: var(--stroke-thin) dashed currentColor;
+  opacity: 0.55;
+}
+
+/* The dot's own transform is reserved for its landing animation, so the slot
+   around it does the positioning. */
+
+.segment {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--stroke-thin);
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  transition: opacity var(--d-base) var(--e-settle);
+}
+
+.casing {
+  fill: none;
+  stroke: var(--bg-page);
+  stroke-width: calc(var(--stroke-thin) * 5);
+  vector-effect: non-scaling-stroke;
+}
+
+/* Lane colours. `currentColor` lets one rule serve strokes, borders and dots. */
+.bride {
+  color: var(--side-bride);
+}
+.groom {
+  color: var(--side-groom);
+}
+.both {
+  color: var(--side-both);
+}
+
+.node {
+  display: block;
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+  border-radius: var(--r-round);
+  box-shadow: 0 0 0 4px var(--bg-page);
+  transition: opacity var(--d-base) var(--e-settle);
+}
+
+.node[data-emphasis] {
+  width: 13px;
+  height: 13px;
+  background: var(--bg-page);
+  border: var(--stroke-mid) solid currentColor;
+  box-shadow:
+    0 0 0 3px var(--bg-page),
+    0 0 0 4px currentColor;
+}
+
+.kalash {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  color: var(--c-brass);
+}
+
+.kalashStroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--stroke-thin);
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.kalashLeaf {
+  fill: var(--c-tulsi);
+  opacity: 0.85;
+}
